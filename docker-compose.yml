@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  shark.api:
+    image: ${DOCKER_REGISTRY-}sharkapi
+    build:
+      context: .
+      dockerfile: src/Shark.Api/Dockerfile
+    depends_on:
+      - shark.db
+
+  shark.db:
+    image: ${DOCKER_REGISTRY-}sharkdb
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    environment:
+      - POSTGRES_PASSWORD=sharkpass
+      - POSTGRES_USER=sharkuser
+      - POSTGRES_DB=sharkdb
+    ports:
+      - 5147:5432
