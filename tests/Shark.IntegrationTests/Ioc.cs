@@ -10,7 +10,6 @@ using Shark.Domain.CustomerManagement;
 namespace Shark.IntegrationTests.Tools;
 public delegate object GetService(Type type);
 public static class Ioc {
-    private static readonly WebApplication _app;    
     private static readonly IServiceProvider _sp;
     public static readonly ILogger _logger;
     public static readonly IConfiguration _configuration;    
@@ -23,6 +22,9 @@ public static class Ioc {
         services.AddMediatR(config => config.RegisterServicesFromAssemblies(typeof(Customer).Assembly,typeof(InsertCustomerCommandHandler).Assembly));
         services.AddDbContext<ApplicationDbContext>(opt => {            
             opt.UseNpgsql("Host=localhost;Port=5147;Username=sharkuser;Password=sharkpass;Database=sharkdb");
+            opt.EnableDetailedErrors();
+            opt.EnableSensitiveDataLogging();
+            opt.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         });
         services.AddLogging();
         _sp = services.BuildServiceProvider();

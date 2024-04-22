@@ -1,21 +1,19 @@
 
+using MediatR;
 using Shark.Domain.Base;
+using Shark.Domain.CustomerManagement;
+using Shark.Domain.Interfaces;
 
-public record struct UpdateCustomerCommand(CustomerDto Customer);
+public record struct UpdateCustomerCommand(CustomerDto Customer) : IRequest;
 
-public class UpdateCustomerCommandHandler : ICommandHandler<UpdateCustomerCommand>
+public readonly record struct UpdateCustomerCommandHandler(UpdateAsync<Guid,CustomerEntity> UpdateAsync) : ICommandHandler<UpdateCustomerCommand>
 {
-    private readonly ApplicationDbContext _context;
-
-    public UpdateCustomerCommandHandler(ApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async Task HandleAsync(UpdateCustomerCommand command)
     {
-        throw new NotImplementedException();
-        // _context.Customers.Update(command.Customer);
-        await _context.SaveChangesAsync();
+        var result = Customer.From(command.Customer);
+        if(!result.IsSuccess())
+            return;
+        var entity = CustomerEntity.From(result.Value);
+        await UpdateAsync(entity.CustomerId,entity);
     }
 }

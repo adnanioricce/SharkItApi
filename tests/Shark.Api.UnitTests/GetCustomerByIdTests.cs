@@ -34,9 +34,9 @@ public class GetCustomerByIdTests
             CustomerId = expectedCustomerDto.CustomerId
             ,FirstName = expectedCustomerDto.FirstName
             ,MiddleName = expectedCustomerDto.MiddleName
-            ,DateOfBirth = expectedCustomerDto.DateOfBirth
+            ,DateOfBirth = expectedCustomerDto.DateOfBirth.Date
             ,CPF = expectedCustomerDto.CPF
-            ,Addresses = Enumerable.Empty<AddressEntity>().ToList()
+            ,CustomerAddresses = Enumerable.Empty<CustomerAddress>().ToList()
         });
         var handler = new GetCustomerByIdQueryHandler(GetByIdAsync);
         // When

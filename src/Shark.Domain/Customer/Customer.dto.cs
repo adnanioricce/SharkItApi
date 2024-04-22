@@ -17,7 +17,7 @@ public record CustomerDto
             MiddleName = entity.MiddleName,
             DateOfBirth = entity.DateOfBirth,
             CPF = entity.CPF,
-            Addresses = entity.Addresses.Select(addr => new AddressDto{
+            Addresses = entity.CustomerAddresses.Select(addr => new AddressDto{
                 AddressLine1 = addr.AddressLine1,
                 AddressLine2 = addr.AddressLine2,
                 District = addr.District,

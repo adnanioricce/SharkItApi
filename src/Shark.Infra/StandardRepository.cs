@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Shark.Domain.CustomerManagement;
+using Shark.Domain.Extensions;
 using Shark.Domain.Interfaces;
 
 namespace Shark.Infra.DAL;
@@ -14,12 +15,17 @@ public static class StandardRepository {
             return await ctx.SaveChangesAsync();
         };
     }
-    public static UpdateAsync<TEntity> Update<TEntity>(ApplicationDbContext ctx)
+    public static UpdateAsync<TId,TEntity> Update<TId,TEntity>(ApplicationDbContext ctx)
         where TEntity : class
     {
-        return async (entity) => {
-            var set = ctx.Set<TEntity>();
-            set.Add(entity);
+        return async (id,entity) => {
+            var set = ctx.Set<TEntity>();            
+            var existingEntity = await set.FindAsync(id);
+            if(existingEntity == default){
+                throw new InvalidOperationException("A request to update a entity that doesn't exists on the database occurred");
+            }
+            // set.(entity);
+            entity.CopyDirtyPropsToDestination(existingEntity);
             return await ctx.SaveChangesAsync();
         };
     }
@@ -34,4 +40,9 @@ public static class StandardRepository {
                 .ToListAsync();
         };
     }
+    public static Query<TEntity> Query<TEntity>(ApplicationDbContext ctx) where TEntity : class
+    {
+        return () => ctx.Set<TEntity>().AsQueryable();
+    }
 }
+    

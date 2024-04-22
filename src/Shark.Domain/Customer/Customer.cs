@@ -20,7 +20,7 @@ public readonly record struct Address
         State = state;
         PostalCode = postalCode;
     }
-    public static Address From(AddressEntity entity)
+    public static Address From(CustomerAddress entity)
         => new (entity.AddressLine1, entity.AddressLine2, entity.Number,entity.District, entity.City, entity.State, entity.PostalCode);
     public static Address From(AddressDto entity)
     {
@@ -28,8 +28,12 @@ public readonly record struct Address
         var addr = new Address(entity.AddressLine1, entity.AddressLine2, entity.Number,entity.District, entity.City, entity.State, entity.PostalCode);
         return addr;
     }
-    public static AddressEntity To(Address entity)
-        => new (entity.AddressLine1, entity.AddressLine2, entity.Number,entity.District, entity.City, entity.State, entity.PostalCode);
+    public static CustomerAddress To(Guid customerId,Address entity)
+    {
+        CustomerAddress r = new (entity.AddressLine1, entity.AddressLine2, entity.Number,entity.District, entity.City, entity.State, entity.PostalCode);
+        r.CustomerId = customerId;
+        return r;
+    }
 }
 public class Customer
 {
@@ -38,7 +42,7 @@ public class Customer
         ,string middleName
         ,DateTime dateOfBirth
         ,string cpf
-        ,IReadOnlyList<Address> addresses)
+        ,IList<Address> addresses)
     {
         CustomerId = customerId;
         FirstName = firstName;
@@ -74,7 +78,9 @@ public class Customer
         if(errors.Any())
             return Result.Fail<Customer>(errors);
         
-        var customer = new Customer(dto.CustomerId == Guid.Empty ? Guid.NewGuid() : dto.CustomerId, dto.FirstName, dto.MiddleName, dto.DateOfBirth, dto.CPF, new Address[] {});        
+        var addrs = dto.Addresses.Select(e => Address.From(e)).ToList();
+        var customer = new Customer(dto.CustomerId == Guid.Empty ? Guid.NewGuid() : dto.CustomerId, dto.FirstName, dto.MiddleName, dto.DateOfBirth, dto.CPF,
+            addrs);
         return Result.Ok(customer);
     }
 }
