@@ -4,6 +4,37 @@ using Shark.Domain.CustomerManagement;
 using Shark.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Shark.Infra.Repositories;
+using Microsoft.Extensions.Logging;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
+async Task<IResult> Handle<T>(T req,Func<T,Task<IResult>> value,ILogger<Program> logger)
+{
+    try
+    {
+        return await value(req);
+    }
+    catch (ArgumentException argEx)
+    {
+        logger.LogError("some arguments of the request are invalid. request = {req} exception: {ex}", JsonSerializer.Serialize(req), argEx);
+        return Results.BadRequest(new
+        {
+            argEx.Message
+        });
+    }
+    catch (ValidationException valEx)
+    {
+        logger.LogError("Validation failed to request {req}: {ex}", JsonSerializer.Serialize(req), valEx);
+        return Results.BadRequest(new
+        {
+            valEx.Message
+        });
+    }
+    catch (Exception ex)
+    {
+        logger.LogError("An exception was throwed when trying to update customer: {ex}", ex);
+        return Results.StatusCode(500);
+    }
+}
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
@@ -36,20 +67,35 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.MapPost("customers",async ([FromBody]InsertCustomerCommand cmd,[FromServices]IMediator mediator) => {
-    await mediator.Send(cmd);
-    return Results.Ok();
+app.MapPost("customers",async ([FromBody]InsertCustomerCommand cmd,[FromServices]IMediator mediator, [FromServices] ILogger<Program> logger) => {
+    return await Handle(cmd, async (req) =>
+    {
+        await mediator.Send(req);
+        return Results.Ok();
+    },logger);
 })
 .WithName("CreateCustomer");
-app.MapPut("customers",async ([FromBody]UpdateCustomerCommand cmd,[FromServices]IMediator mediator) => {
-    await mediator.Send(cmd);
-    return Results.Ok();
+app.MapPut("customers",async (
+    [FromBody]UpdateCustomerCommand cmd,
+    [FromServices]IMediator mediator, 
+    [FromServices]ILogger<Program> logger) => {
+        return await Handle(cmd,async (req) =>
+        {
+            await mediator.Send(req);
+            return Results.Ok();
+        },logger);
 })
 .WithName("UpdateCustomer");
-app.MapDelete("customers", async ([FromBody] DeleteCustomerCommand cmd, [FromServices] IMediator mediator) =>
+
+
+
+app.MapDelete("customers", async ([FromBody] DeleteCustomerCommand cmd, [FromServices] IMediator mediator, [FromServices] ILogger<Program> logger) =>
 {
-    await mediator.Send(cmd);
-    return Results.Ok();
+    return await Handle(cmd, async req =>
+    {
+        await mediator.Send(req);
+        return Results.Ok();
+    }, logger);
 })
 .WithName("DeleteCustomer");
 app.MapGet("customers/{id:Guid}",async (Guid id,[FromServices]IMediator mediator) => {

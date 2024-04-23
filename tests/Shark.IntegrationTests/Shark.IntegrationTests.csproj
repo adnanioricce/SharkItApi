@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Shark.ApiSimples\Shark.Api.csproj" />    
+    <ProjectReference Include="..\..\src\Shark.Api\Shark.Api.csproj" />    
   </ItemGroup>
 
 </Project>

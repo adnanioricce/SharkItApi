@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shark.IntegrationTests", "t
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{F280D890-18F6-436A-9A86-80E08CDD44A5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shark.Api", "src\Shark.ApiSimples\Shark.Api.csproj", "{F368EFF5-ED69-41FC-9F8F-C482EB404B42}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shark.Api", "src\Shark.Api\Shark.Api.csproj", "{F368EFF5-ED69-41FC-9F8F-C482EB404B42}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,9 +1,10 @@
 using Bogus;
 using Bogus.Extensions.Brazil;
 using Microsoft.EntityFrameworkCore;
-using Shark.Api;
 using Shark.Domain.CustomerManagement;
 using Shark.Domain.Interfaces;
+using Shark.Infra.Repositories;
+
 //using NS
 using Shark.IntegrationTests.Tools;
 namespace Shark.IntegrationTests.CustomerManagement.Commands;

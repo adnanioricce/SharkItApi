@@ -13,14 +13,15 @@ public static class Ioc {
     public static readonly ILogger _logger;
     public static readonly IConfiguration _configuration;    
     static Ioc(){
-        // _app = Program.Create(Enumerable.Empty<string>().ToArray());        
-        // if(_app is null){
-        //     throw new InvalidOperationException($"Couldn't setup the testing dependencies. check the Appplication configuration in {typeof(Program).Name}");
-        // }
-        var services = new ServiceCollection();        
+        _configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.Development.json")
+            .Build();
+        var services = new ServiceCollection();                
         services.AddMediatR(config => config.RegisterServicesFromAssemblies(typeof(Customer).Assembly));
-        services.AddDbContext<ApplicationDbContext>(opt => {            
-            opt.UseNpgsql("Host=localhost;Port=5147;Username=sharkuser;Password=sharkpass;Database=sharkdb");
+        services.AddDbContext<ApplicationDbContext>(opt => {
+            var connStr = _configuration.GetConnectionString("Default");
+            opt.UseNpgsql(connStr);
             opt.EnableDetailedErrors();
             opt.EnableSensitiveDataLogging();
             opt.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
@@ -39,7 +40,7 @@ public static class Ioc {
     public static T GetServiceWith<T>(IServiceProvider serviceProvider)
         => (T)GetServiceWith(serviceProvider,typeof(T));
     public static T GetService<T>() => GetServiceWith<T>(_sp);    
-    
+
     public static T CreateInstanceWith<T>()
     {
         Type type = typeof(T);

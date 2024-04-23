@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 public record struct Error(string Message);
-public readonly record struct Result<T>(T Value, params Error[] Errors) { 
-}
+public readonly record struct Result<T>(T Value, params Error[] Errors);
 
 public static class Failure{
-    public static Error ToError(this ValidationResult r) => new Error(r.ErrorMessage);
+    public static Error ToError(this ValidationResult r) => new Error($"{r.ErrorMessage} \n {string.Join("\n", r.MemberNames)}");
 }
 public static class Result
 {
