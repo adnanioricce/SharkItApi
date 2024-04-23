@@ -18,6 +18,8 @@ public record CustomerDto
             DateOfBirth = entity.DateOfBirth,
             CPF = entity.CPF,
             Addresses = entity.CustomerAddresses.Select(addr => new AddressDto{
+                AddressId = addr.AddressId,
+                CustomerId = addr.CustomerId,
                 AddressLine1 = addr.AddressLine1,
                 AddressLine2 = addr.AddressLine2,
                 District = addr.District,
@@ -32,6 +34,8 @@ public record CustomerDto
 
 public record AddressDto
 {
+    public Guid AddressId { get; set; }
+    public Guid CustomerId { get; set; }
     public string AddressLine1 { get; set; }
     public string AddressLine2 { get; set; }
     public int Number { get; set; }

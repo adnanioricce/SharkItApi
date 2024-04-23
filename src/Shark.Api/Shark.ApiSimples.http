@@ -1,0 +1,33 @@
+@Shark.ApiSimples_HostAddress = http://localhost:5119
+@CustomerId = {{$guid}}
+GET {{Shark.ApiSimples_HostAddress}}/customers?pageNumber=1&pageSize=6
+Accept: application/json
+
+
+###
+POST {{Shark.ApiSimples_HostAddress}}/customers
+accept: */*
+Content-Type: application/json
+
+"{
+  "customer": {
+    "customerId": "00000000-0000-0000-0000-000000000000",
+    "firstName": "string",
+    "middleName": "string",
+    "dateOfBirth": "1992-04-23T00:05:21.581Z",
+    "cpf": "299.020.240-41",
+    "addresses": [
+      {
+        "addressId": "00000000-0000-0000-0000-000000000000",
+        "customerId": "00000000-0000-0000-0000-000000000000",
+        "addressLine1": "Rua Rondônia",
+        "addressLine2": "string",
+        "number": 120,
+        "district": "Bosque",
+        "city": "Rio Branco",
+        "state": "AC",
+        "postalCode": "69900508"
+      }
+    ]
+  }
+}"

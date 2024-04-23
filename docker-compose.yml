@@ -2,10 +2,13 @@ version: '3.4'
 
 services:
   shark.api:
-    image: ${DOCKER_REGISTRY-}sharkapi
+    image: ${DOCKER_REGISTRY-}sharkapisimples
     build:
       context: .
-      dockerfile: src/Shark.Api/Dockerfile
+      dockerfile: src/Shark.ApiSimples/Dockerfile
+    
+    networks:
+      - sharknet
     depends_on:
       - shark.db
 
@@ -20,3 +23,9 @@ services:
       - POSTGRES_DB=sharkdb
     ports:
       - 5147:5432
+    networks:
+      - sharknet
+
+networks:
+  sharknet:
+    driver: bridge

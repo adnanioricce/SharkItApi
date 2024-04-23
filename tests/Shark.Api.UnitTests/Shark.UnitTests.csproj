@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Bogus" Version="35.5.0" />
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
     <PackageReference Include="Mediatr" Version="12.2.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
@@ -26,10 +27,8 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Shark.Domain\Shark.Domain.csproj" />
-    <ProjectReference Include="..\..\src\Shark.Api\Shark.Api.csproj" />
-    <ProjectReference Include="..\..\src\Shark.Application\Shark.Application.csproj" />
+  <ItemGroup>    
+    <ProjectReference Include="..\..\src\Shark.ApiSimples\Shark.Api.csproj" />    
   </ItemGroup>
 
 </Project>

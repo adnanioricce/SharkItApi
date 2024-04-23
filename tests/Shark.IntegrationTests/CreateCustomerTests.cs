@@ -1,8 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Shark.API.CustomerManagement;
 using Shark.Domain.CustomerManagement;
-using Shark.Infra.DAL;
 using Shark.IntegrationTests.Tools;
 namespace Shark.IntegrationTests.CustomerManagement.Api;
 public class CreateCustomerTests

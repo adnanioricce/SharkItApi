@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Shark.Application.CustomerManagement;
 using Shark.Domain.CustomerManagement;
 
 namespace Shark.IntegrationTests.Tools;
@@ -19,7 +18,7 @@ public static class Ioc {
         //     throw new InvalidOperationException($"Couldn't setup the testing dependencies. check the Appplication configuration in {typeof(Program).Name}");
         // }
         var services = new ServiceCollection();        
-        services.AddMediatR(config => config.RegisterServicesFromAssemblies(typeof(Customer).Assembly,typeof(InsertCustomerCommandHandler).Assembly));
+        services.AddMediatR(config => config.RegisterServicesFromAssemblies(typeof(Customer).Assembly));
         services.AddDbContext<ApplicationDbContext>(opt => {            
             opt.UseNpgsql("Host=localhost;Port=5147;Username=sharkuser;Password=sharkpass;Database=sharkdb");
             opt.EnableDetailedErrors();

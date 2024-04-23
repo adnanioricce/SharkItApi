@@ -3,7 +3,7 @@ using System.Reflection;
 namespace Shark.Domain.Extensions;
 public static class ObjectExtensions
 {
-    public static void CopyDirtyPropsToDestination<T>(this T source, T destination)
+    public static bool CopyDirtyPropsToDestination<T>(this T source, T destination)
     {
         if (source == null)
             throw new ArgumentNullException(nameof(source));
@@ -14,7 +14,7 @@ public static class ObjectExtensions
 
         Type type = typeof(T);
         PropertyInfo[] properties = type.GetProperties();
-
+        bool changed = false;
         foreach (PropertyInfo property in properties)
         {
             object sourceValue = property.GetValue(source);
@@ -23,7 +23,9 @@ public static class ObjectExtensions
             if (!Equals(sourceValue, destinationValue))
             {
                 property.SetValue(destination, sourceValue);
+                changed = true;
             }
         }
+        return changed;
     }
 }

@@ -18,35 +18,38 @@ public class CustomerEntity
 
     public string CPF { get; set; } = null!;
 
-    public virtual ICollection<CustomerAddress> CustomerAddresses { get; set; } = new List<CustomerAddress>();
+    public virtual ICollection<CustomerAddressEntity> CustomerAddresses { get; set; } = new List<CustomerAddressEntity>();
 
     public static CustomerEntity From(Customer customer)
-    {
+    {        
         return new CustomerEntity(){
             CustomerId = customer.CustomerId,
             FirstName = customer.FirstName,
             MiddleName = customer.MiddleName,
             DateOfBirth = customer.DateOfBirth,
-            CPF = customer.CPF,
-            CustomerAddresses = customer.Addresses.Select(addr => Address.To(customer.CustomerId,addr)).ToList()
+            CPF = customer.CPF.ToString(),
+            CustomerAddresses = customer.Addresses.Select(CustomerAddress.To).ToList()
         };
     }
 }
 
-public class CustomerAddress
+public class CustomerAddressEntity
 {
-    public CustomerAddress()
+    public CustomerAddressEntity()
     {
         
     }
-    public CustomerAddress(string addressLine1, string addressLine2, int number, string district, string city, string state, string postalCode){
-        AddressLine1 = addressLine1;
-        AddressLine2 = addressLine2;
-        Number = number;
-        District = district;
-        City = city;
-        State = state;
-        PostalCode = postalCode;
+    public CustomerAddressEntity(Guid addressId,Guid customerId, Address address)
+    {
+        AddressId = addressId;
+        CustomerId = customerId;
+        AddressLine1 = address.AddressLine1;
+        AddressLine2 = address.AddressLine2;
+        Number = address.Number;
+        District = address.District;
+        City = address.City;
+        State = address.State;
+        PostalCode = address.PostalCode;
     }
     public Guid AddressId { get; set; } = Guid.NewGuid();
 
